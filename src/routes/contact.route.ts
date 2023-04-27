@@ -14,11 +14,12 @@ export class ContactRoute implements IContactRoute{
     }
 
     bindRoutes(): void {
-        this.router.get('/', this.contactController.getContact);
-        this.router.get('/:id', this.contactController.getOneContact);
-        this.router.post('/', this.contactController.createContact);
-        this.router.put('/:id', this.contactController.updateOneContact);
-        this.router.delete('/:id', this.contactController.deleteOneContact);
+        this.router.get('/', this.contactController.getContact.bind(this.contactController));
+        //this.router.get('/', this.contactController.getContact);
+        this.router.get('/:id', this.contactController.getOneContact.bind(this.contactController));
+        this.router.post('/', this.contactController.createContact.bind(this.contactController));
+        this.router.put('/:id', this.contactController.updateOneContact.bind(this.contactController));
+        this.router.delete('/:id', this.contactController.deleteOneContact.bind(this.contactController));
     }
 
 
