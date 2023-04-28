@@ -32,7 +32,7 @@ export class UsersRepository implements IUsersRepository{
         this.userModel = model("User", this.userSchema);
     }
     async userRegister(newUser: User): Promise<User> {
-        return await this.userModel.create({
+        return this.userModel.create({
             username: newUser.username,
             email: newUser.email,
             password: newUser.password
@@ -47,14 +47,10 @@ export class UsersRepository implements IUsersRepository{
 
     }
 
-    async userCheck(email: string): Promise<boolean> {
-        const userAvailable = await this.userModel.findOne({
+    async userCheck(email: string): Promise<User | null> {
+        console.log("Email in check " + email);
+        return this.userModel.findOne({
             email
         });
-        if(userAvailable) {
-            return false;
-        } else {
-            return true;
-        }
     }
 }

@@ -7,15 +7,18 @@ import 'reflect-metadata';
 import {IContactRoute} from "./contact.route.interface";
 import {ValidateMiddleware} from "../middlewares/validate.middleware";
 import {ContactDto} from "../dto/contact.dto";
+import {IValidateTokenHandler} from "../middlewares/validate.token.handler.interface";
 @injectable()
 export class ContactRoute implements IContactRoute{
     public router: Router;
 
-    constructor(@inject(TYPES.IContactController) private contactController: IContactController) {
+    constructor(@inject(TYPES.IContactController) private contactController: IContactController,
+                @inject(TYPES.IValidateTokenHandler) private validateTokenHandler: IValidateTokenHandler) {
         this.router = Router();
     }
 
     bindRoutes(): void {
+        this.router.use(this.validateTokenHandler.validateToken);
         this.router.get('/', this.contactController.getContact.bind(this.contactController));
         //this.router.get('/', this.contactController.getContact);
         this.router.get('/:id', this.contactController.getOneContact.bind(this.contactController));

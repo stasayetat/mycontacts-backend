@@ -12,7 +12,8 @@ export class ContactController implements IContactController{
     constructor(@inject(TYPES.IContactRepository) private contactRepository: IContactRepository) {
     }
     async getContact (req: Request, res: Response, next: NextFunction): Promise<void> {
-        const allContacts = await this.contactRepository.getAllContacts();
+        console.log(`Contacts for user: ${req.body.user.email}, id: ${req.body.user.id}`);
+        const allContacts = await this.contactRepository.getAllContacts(req.body.user.id);
         res.status(200).json(allContacts);
     };
 
@@ -27,7 +28,7 @@ export class ContactController implements IContactController{
             res.status(400);
             next(new Error("All field are mandatory"));
         } else {
-            const contact = await this.contactRepository.createNewContact(name, email, phone);
+            const contact = await this.contactRepository.createNewContact(req.body.user.id, name, email, phone);
             if(contact) {
                 res.status(201).json(contact);
             }
@@ -59,8 +60,15 @@ export class ContactController implements IContactController{
     async updateOneContact (req: Request, res: Response, next: NextFunction): Promise<void> {
         const contactID = this.createObjectID(req.params.id);
         if(contactID instanceof ObjectId) {
-            const cont = await this.contactRepository.updateContact(contactID, req.body);
-            res.json(cont);
+            const checkContact = await this.contactRepository.findOneContact(contactID);
+            console.log(`User_ID ${checkContact?.user_id} and req.body.ID ${req.body.user.id}`);
+            if(checkContact?.user_id?.valueOf() !== req.body.user.id) {
+                res.status(403);
+                next(new Error("User don't have permission to update other user"));
+            } else {
+                const cont = await this.contactRepository.updateContact(contactID, req.body);
+                res.json(cont);
+            }
         }
         else {
             res.status(404);
@@ -71,8 +79,15 @@ export class ContactController implements IContactController{
     async deleteOneContact (req: Request, res: Response, next: NextFunction): Promise<void> {
         const contactID = this.createObjectID(req.params.id);
         if(contactID instanceof ObjectId) {
-            const deleteContact = await this.contactRepository.deleteOneContact(contactID);
-            res.json(deleteContact);
+            const checkContact = await this.contactRepository.findOneContact(contactID);
+            if(checkContact?.user_id?.valueOf() !== req.body.user.id) {
+                res.status(403);
+                next(new Error("User don't have permission to delete other user"));
+            } else {
+                const deleteContact = await this.contactRepository.deleteOneContact(contactID);
+                res.json(deleteContact);
+            }
+
         }
         else {
             res.status(404);

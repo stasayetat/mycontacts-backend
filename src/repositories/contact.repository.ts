@@ -8,6 +8,11 @@ import {ContactRoute} from "../routes/contact.route";
 @injectable()
 export class ContactRepository implements IContactRepository {
     private contactSchema = new Schema({
+        user_id: {
+            type: Schema.Types.ObjectId,
+            required: true,
+            ref: "User"
+        },
         name: {
             type: String,
             required: [true, "Please add the contact name"],
@@ -28,14 +33,17 @@ export class ContactRepository implements IContactRepository {
         this.contactModel = mongoose.model("Contact", this.contactSchema);
     }
 
-    async getAllContacts(): Promise<Contact[] | null> {
-        return this.contactModel.find({});
+    async getAllContacts(userId: number): Promise<Contact[] | null> {
+        return this.contactModel.find({
+            user_id: userId
+        });
     }
-    async createNewContact(name: string, email: string, phone: string): Promise<Contact | null> {
+    async createNewContact(ferId: Schema.Types.ObjectId, name: string, email: string, phone: string): Promise<Contact | null> {
         return this.contactModel.create({
             name,
             email,
-            phone
+            phone,
+            user_id: ferId
         });
     }
 

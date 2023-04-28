@@ -5,6 +5,7 @@ import {IContactRepository} from "./repositories/contact.repository.interface";
 import {IUserRoute} from "./routes/users.route.interface";
 import {IUsersController} from "./controllers/users.controller.interface";
 import {IUsersRepository} from "./repositories/users.repostiory.interface";
+import {IValidateTokenHandler} from "./middlewares/validate.token.handler.interface";
 
 export const TYPES = {
     IContactController: Symbol.for('IContactController'),
@@ -15,5 +16,6 @@ export const TYPES = {
     IUserRoute: Symbol.for('IUserRoute'),
     IUsersController: Symbol.for('IUsersController'),
     IUsersRepository: Symbol.for('IUsersRepository'),
+    IValidateTokenHandler: Symbol.for('IValidateTokenHandler'),
     App: Symbol.for('App')
 }

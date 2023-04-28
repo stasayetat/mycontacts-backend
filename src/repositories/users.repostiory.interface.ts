@@ -5,5 +5,5 @@ export interface IUsersRepository {
     userRegister(newUser: User): Promise<User | null>;
     userLogin(): Promise<void>;
     userCurrent(): Promise<void>;
-    userCheck(email: string): Promise<boolean>;
+    userCheck(email: string): Promise<User | null>;
 }

@@ -6,6 +6,7 @@ import {IContactRoute} from "./routes/contact.route.interface";
 import {IErrorHandler} from "./middlewares/error.handler.interface";
 import {MongooseService} from "./config/db-connection";
 import {IUserRoute} from "./routes/users.route.interface";
+import {IValidateTokenHandler} from "./middlewares/validate.token.handler.interface";
 @injectable()
 export class App {
     private app: Express;

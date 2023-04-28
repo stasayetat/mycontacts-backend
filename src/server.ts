@@ -18,6 +18,8 @@ import {IUsersController} from "./controllers/users.controller.interface";
 import {UsersController} from "./controllers/users.controller";
 import {IUsersRepository} from "./repositories/users.repostiory.interface";
 import {UsersRepository} from "./repositories/users.repository";
+import {IValidateTokenHandler} from "./middlewares/validate.token.handler.interface";
+import {ValidateTokenHandler} from "./middlewares/validate.token.handler";
 config();
 const myContainer = new Container();
 myContainer.bind<IContactController>(TYPES.IContactController).to(ContactController).inSingletonScope();
@@ -28,6 +30,7 @@ myContainer.bind<IContactRepository>(TYPES.IContactRepository).to(ContactReposit
 myContainer.bind<IUserRoute>(TYPES.IUserRoute).to(UsersRoute).inSingletonScope();
 myContainer.bind<IUsersController>(TYPES.IUsersController).to(UsersController).inSingletonScope();
 myContainer.bind<IUsersRepository>(TYPES.IUsersRepository).to(UsersRepository).inSingletonScope();
+myContainer.bind<IValidateTokenHandler>(TYPES.IValidateTokenHandler).to(ValidateTokenHandler).inSingletonScope();
 myContainer.bind<App>(TYPES.App).to(App);
 
 async function start(): Promise<void> {
