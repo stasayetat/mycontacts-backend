@@ -5,6 +5,8 @@ import {inject, injectable} from "inversify";
 import {TYPES} from "../types";
 import 'reflect-metadata';
 import {IContactRoute} from "./contact.route.interface";
+import {ValidateMiddleware} from "../middlewares/validate.middleware";
+import {ContactDto} from "../dto/contact.dto";
 @injectable()
 export class ContactRoute implements IContactRoute{
     public router: Router;
@@ -17,8 +19,8 @@ export class ContactRoute implements IContactRoute{
         this.router.get('/', this.contactController.getContact.bind(this.contactController));
         //this.router.get('/', this.contactController.getContact);
         this.router.get('/:id', this.contactController.getOneContact.bind(this.contactController));
-        this.router.post('/', this.contactController.createContact.bind(this.contactController));
-        this.router.put('/:id', this.contactController.updateOneContact.bind(this.contactController));
+        this.router.post('/', new ValidateMiddleware(ContactDto).execute, this.contactController.createContact.bind(this.contactController));
+        this.router.put('/:id', new ValidateMiddleware(ContactDto).execute, this.contactController.updateOneContact.bind(this.contactController));
         this.router.delete('/:id', this.contactController.deleteOneContact.bind(this.contactController));
     }
 
